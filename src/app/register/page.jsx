@@ -11,36 +11,52 @@ import {
   Button,
   Label,
   Form,
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectIndicator,
-  SelectPopover,
-  ListBox,
-  ListBoxItem,
 } from "@heroui/react";
 import { FaGoogle } from "react-icons/fa";
 import { PiNotebookBold } from "react-icons/pi";
 import { useForm } from "react-hook-form";
 import { authClient } from "@/lib/auth-client";
+import toast from "react-hot-toast";
+import { uploadImage } from "../utils/uploadImage";
 
 export default function RegisterPage() {
-  const { register, handleSubmit } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
+  // for onSubmit
   const onSubmit = async (data) => {
-    console.log(data, "data from register pg");
+    console.log(data.image, "data from register pg");
+    // return;
+    // *****
+    // Upload image to imgBB
+    const imageFile = data.image[0];
+    // console.log(imageFile, "image file");
+
+    const imageUrl = await uploadImage(imageFile); //reUsable uploadImage function call
+    // console.log(imageUrl, "Image Url");
+    // return;
 
     const { data: signUpData, error: signUpError } =
       await authClient.signUp.email({
-        ...data,
-        // email: data.email,
-        // name: data.name,
-        // password: data.password,
-        // image: imageUrl,
-        // role: data.role,
+        // ...data,
+        email: data.email,
+        name: data.name,
+        password: data.password,
+        image: imageUrl,
+        role: data.role,
       });
 
-    console.log(signUpData, signUpError, "signUp data");
+    // console.log(signUpData, signUpError, "signUp data");
+
+    if (signUpError) {
+      toast.error("Registration not succeed...");
+    } else {
+      toast.success("Registration is Successful !");
+      //   redirect("/");
+    }
   };
 
   return (
@@ -96,6 +112,9 @@ export default function RegisterPage() {
                 placeholder="John Doe"
                 className="w-full bg-slate-900/50 border-white/10 hover:border-cyan-500  text-white"
               />
+              {errors.name && (
+                <p className="text-red-500">{errors.name.message}</p>
+              )}
             </div>
 
             {/* email address */}
@@ -113,6 +132,9 @@ export default function RegisterPage() {
                 type="email"
                 className="w-full bg-slate-900/50 border-white/10 hover:border-cyan-500 text-white"
               />
+              {errors.email && (
+                <p className="text-red-500">{errors.email.message}</p>
+              )}
             </div>
 
             {/* image */}
@@ -125,10 +147,15 @@ export default function RegisterPage() {
               </Label>
               <Input
                 {...register("image", { required: "Image is Required" })}
+                type="file"
+                accept="image/*"
                 id="image"
                 placeholder="https://example.com/avatar.jpg"
                 className="w-full bg-slate-900/50 border-white/10 hover:border-cyan-500 text-white"
               />
+              {errors.image && (
+                <p className="text-red-500">{errors.image.message}</p>
+              )}
             </div>
 
             {/* password */}
@@ -150,6 +177,9 @@ export default function RegisterPage() {
                 type="password"
                 className="w-full bg-slate-900/50 border-white/10 hover:border-cyan-500  text-white"
               />
+              {errors.password && (
+                <p className="text-red-500">{errors.password.message}</p>
+              )}
             </div>
 
             {/* role select */}
@@ -195,12 +225,12 @@ export default function RegisterPage() {
                   </svg>
                 </div>
               </div>
-              {/* 
+
               {errors.role && (
                 <p className="text-red-500 text-xs mt-0.5 pl-1">
                   {errors.role.message}
                 </p>
-              )} */}
+              )}
             </div>
 
             <Button
