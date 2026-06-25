@@ -155,7 +155,7 @@ export default function Navbar() {
                       </p>
                     </div>
                     <Link
-                      href="/dashboard/organizer"
+                      href="/dashboard/writer"
                       onClick={() => setDropdownOpen(false)}
                       className="w-full flex items-center gap-2.5 px-4 py-2.5 text-xs font-semibold text-slate-300 hover:text-white hover:bg-white/5 transition"
                     >
