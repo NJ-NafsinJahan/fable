@@ -1,4 +1,5 @@
 "use client";
+import { Button } from "@heroui/react";
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
@@ -7,10 +8,15 @@ import { FaUser, FaSignOutAlt, FaThLarge } from "react-icons/fa";
 import { FiMenu, FiX } from "react-icons/fi";
 import { PiNotebookBold } from "react-icons/pi";
 import { motion, AnimatePresence } from "motion/react";
+import { useRouter } from "next/navigation";
+import { authClient, useSession } from "@/lib/auth-client";
+import Image from "next/image";
 
 export default function Navbar() {
   const pathname = usePathname();
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const router = useRouter();
+  const { data: session } = useSession();
+  //   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -32,19 +38,19 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleLogout = () => {
-    setIsLoggedIn(false);
-    setDropdownOpen(false);
-    setMobileMenuOpen(false);
-    alert("Logged Out! (Design Only)");
+  const handleLogout = async () => {
+    await authClient.signOut();
+    router.push("/");
   };
 
-  const mockUser = {
-    name: "Jane Doe",
-    email: "jane@example.com",
-    role: "attendee",
-    image: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde",
-  };
+  console.log(session, "session form navbar");
+
+  //   const mockUser = {
+  //     name: "Jane Doe",
+  //     email: "jane@example.com",
+  //     role: "attendee",
+  //     image: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde",
+  //   };
 
   return (
     <div className="w-full flex justify-center pt-4 fixed top-0 left-0 z-50 px-4 pointer-events-none">
@@ -93,7 +99,7 @@ export default function Navbar() {
             >
               Browse Ebooks
             </Link>
-            {isLoggedIn && (
+            {session && session?.user && (
               <Link
                 href="/dashboard"
                 className={`text-sm font-medium transition-colors ${
@@ -110,14 +116,13 @@ export default function Navbar() {
           {/* RIGHT ACTIONS */}
           <div className="flex items-center gap-3">
             {/* Login/Sign Up Buttons (Desktop Only) */}
-            {!isLoggedIn && (
+            {!session && (
               <div className="hidden sm:flex items-center gap-3">
-                <button
-                  onClick={() => setIsLoggedIn(true)}
-                  className="inline-flex items-center justify-center font-semibold text-xs text-slate-300 hover:text-white h-9 px-4 rounded-xl hover:bg-white/5 transition"
-                >
-                  Login
-                </button>
+                <Link href="/login">
+                  <Button className="inline-flex items-center justify-center font-semibold text-xs text-slate-300 hover:text-white h-9 px-4 rounded-xl hover:bg-white/5 transition">
+                    Login
+                  </Button>
+                </Link>
                 <Link
                   href="/register"
                   className="inline-flex items-center justify-center font-semibold text-xs bg-linear-to-r from-cyan-400 via-blue-600 to-indigo-900 text-white shadow-[0_4px_15px_rgba(30,144,255,0.3)] hover:from-cyan-500 hover:via-blue-700 hover:to-indigo-950 transition h-9 px-4 rounded-full"
@@ -128,15 +133,18 @@ export default function Navbar() {
             )}
 
             {/* Profile Dropdown (Both Desktop & Mobile) */}
-            {isLoggedIn && (
+
+            {session && session?.user && (
               <div className="relative" ref={dropdownRef}>
                 <button
                   onClick={() => setDropdownOpen(!dropdownOpen)}
                   className="flex items-center transition-transform hover:scale-105 outline-none focus:outline-none cursor-pointer"
                 >
-                  <img
+                  <Image
+                    width={20}
+                    height={20}
                     className="w-9 h-9 rounded-full object-cover border border-cyan-400 shadow-md shadow-cyan-500/20"
-                    src={mockUser.image}
+                    src={session?.user?.image}
                     alt="avatar"
                   />
                 </button>
@@ -145,13 +153,13 @@ export default function Navbar() {
                   <div className="absolute right-0 mt-3 w-56 bg-slate-950/95 border border-white/10 rounded-2xl shadow-2xl backdrop-blur-xl py-2 z-55 animate-in fade-in slide-in-from-top-2 duration-200">
                     <div className="px-4 py-2.5 border-b border-white/5 mb-1.5 cursor-default">
                       <p className="text-[10px] text-cyan-400 font-bold uppercase tracking-wider">
-                        {mockUser.role} Account
+                        {session?.user?.role} Account
                       </p>
                       <p className="font-bold text-white text-sm mt-0.5">
-                        {mockUser.name}
+                        {session?.user?.name}
                       </p>
                       <p className="text-[11px] text-slate-400 truncate mt-0.5">
-                        {mockUser.email}
+                        {session?.user?.email}
                       </p>
                     </div>
                     <Link
@@ -163,7 +171,7 @@ export default function Navbar() {
                       <span>My Dashboard</span>
                     </Link>
                     <Link
-                      href={`/dashboard/${mockUser.role}`}
+                      href={`/dashboard/${session?.user?.role}`}
                       onClick={() => setDropdownOpen(false)}
                       className="w-full flex items-center gap-2.5 px-4 py-2.5 text-xs font-semibold text-slate-300 hover:text-white hover:bg-white/5 transition"
                     >
@@ -224,7 +232,7 @@ export default function Navbar() {
                     >
                       Browse Ebooks
                     </Link>
-                    {isLoggedIn && (
+                    {session && session?.user && (
                       <Link
                         href="/dashboard"
                         onClick={() => setMobileMenuOpen(false)}
@@ -238,18 +246,14 @@ export default function Navbar() {
                       </Link>
                     )}
 
-                    {!isLoggedIn && (
+                    {!session && (
                       <>
                         <div className="border-t border-white/5 my-1" />
-                        <button
-                          onClick={() => {
-                            setIsLoggedIn(true);
-                            setMobileMenuOpen(false);
-                          }}
-                          className="w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-slate-300 hover:bg-white/5 transition"
-                        >
-                          Login
-                        </button>
+                        <Link href="/login">
+                          <Button className="w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-slate-300 hover:bg-white/5 transition">
+                            Login
+                          </Button>
+                        </Link>
                         <Link
                           href="/register"
                           onClick={() => setMobileMenuOpen(false)}

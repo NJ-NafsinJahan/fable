@@ -27,9 +27,10 @@ export default function RootLayout({ children }) {
     >
       <body className="min-h-full flex flex-col">
         {/* Main Layout */}
-        <Navbar></Navbar>
-        {children}
-        <Footer></Footer>
+        {/* <Navbar></Navbar> */}
+        {/* Navbar footer and other section is (mainLayout) ar Layout a */}
+        <div>{children}</div>
+        {/* <Footer></Footer> */}
         <Toaster />
       </body>
     </html>
