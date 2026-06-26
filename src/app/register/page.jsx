@@ -58,7 +58,7 @@ export default function RegisterPage() {
     } else {
       toast.success("Registration is Successful !");
       //   redirect("/");
-      //   router.push("/");
+      router.push("/");
     }
   };
 

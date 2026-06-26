@@ -2,6 +2,7 @@ import React from "react";
 
 import { Card, Button } from "@heroui/react";
 import { FaCalendarAlt, FaCrown, FaDollarSign, FaUsers } from "react-icons/fa";
+import DashboardHeader from "@/components/DashboardHeader";
 
 const WriterDashboard = () => {
   const stats = {
@@ -15,6 +16,12 @@ const WriterDashboard = () => {
 
   return (
     <div className="space-y-6 mt-6 w-full max-w-7xl mx-auto px-1">
+      {/* HEADER SECTION */}
+      <DashboardHeader
+        title="Welcome Back, Creator"
+        description="Here's a quick look at your writing empire. Track your growth, earnings, and engagement in real-time."
+        badge="Dashboard Overview"
+      />
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         {/* Card 1 - Total Ebooks */}
         <Card
