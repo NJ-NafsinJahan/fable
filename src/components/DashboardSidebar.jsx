@@ -39,25 +39,25 @@ const DashboardSidebar = ({ children }) => {
       key: "writer-profile",
       label: "Writer Profile",
       icon: FaBuilding,
-      href: "/dashboard/writer-profile",
+      href: "/dashboard/writer/writer-profile",
     },
     {
       key: "add-ebook",
       label: "Add Ebook",
       icon: FaPlus,
-      href: "/dashboard/add-ebook",
+      href: "/dashboard/writer/add-ebook",
     },
     {
       key: "manage-ebooks",
       label: "Manage Ebooks",
       icon: FaCalendarAlt,
-      href: "/dashboard/manage-ebooks",
+      href: "/dashboard/writer/manage-ebooks",
     },
     {
       key: "sales",
       label: "Sales",
       icon: FaUsers,
-      href: "/dashboard/sales",
+      href: "/dashboard/writer/sales",
     },
   ];
 
@@ -118,8 +118,8 @@ const DashboardSidebar = ({ children }) => {
   ];
 
   //   const role = "admin";
-  const role = "reader";
-  //   const role = session?.user?.role;
+  //   const role = "reader";
+  const role = session?.user?.role;
   console.log(role, " role from dashboard sidebar");
 
   const menuItems =
