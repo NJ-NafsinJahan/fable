@@ -12,19 +12,17 @@ import {
   FaPlus,
   FaSignOutAlt,
   FaUsers,
+  FaUserCircle,
+  FaTicketAlt,
+  FaHistory,
+  FaUserShield,
 } from "react-icons/fa";
+import { FaBookBookmark } from "react-icons/fa6";
+import { TbReportMoney } from "react-icons/tb";
 
 const DashboardSidebar = ({ children }) => {
   const { data: session } = useSession();
-  console.log(session, "from dashboard layout");
-  //   const { data } = useSession();
-  //   console.log(data, "full data object");
-  //   const session = data?.session;
-  //   const user = data?.user;
-  //   const role = data?.user?.role;
-
-  const role = session?.user?.role;
-  console.log(role, " role from dashboard layout");
+  console.log(session, "from dashboard sidebar");
 
   //   for logout
   const handleLogout = () => {};
@@ -62,6 +60,77 @@ const DashboardSidebar = ({ children }) => {
       href: "/dashboard/sales",
     },
   ];
+
+  //   Reader sidebar menu
+  const readerMenu = [
+    {
+      key: "overview",
+      label: "Overview",
+      icon: FaUserCircle,
+      href: "/dashboard/reader",
+    },
+    {
+      key: "purchased-ebook",
+      label: "Purchased Ebooks",
+      icon: FaTicketAlt,
+      href: "/dashboard/reader/purchased-ebook",
+    },
+    {
+      key: "payments",
+      label: "Payments",
+      icon: FaHistory,
+      href: "/dashboard/reader/payments",
+    },
+    {
+      key: "bookmark",
+      label: "Bookmarks",
+      icon: FaBookBookmark,
+      href: "/dashboard/reader/payments",
+    },
+  ];
+
+  // Admin sidebar Menu
+  const adminMenu = [
+    {
+      key: "overview",
+      label: "Overview",
+      icon: FaUserCircle,
+      href: "/dashboard/admin",
+    },
+    {
+      key: "manage-users",
+      label: "Manage Users",
+      icon: FaUserShield,
+      href: "/dashboard/admin/manage-users",
+    },
+    {
+      key: "manage-all-ebooks",
+      label: "Manage all ebooks",
+      icon: FaCalendarAlt,
+      href: "/dashboard/admin/manage-all-ebooks",
+    },
+    {
+      key: "transactions",
+      label: "All Transaction ",
+      icon: TbReportMoney,
+      href: "/dashboard/admin/transactions",
+    },
+  ];
+
+  //   const role = "admin";
+  const role = "reader";
+  //   const role = session?.user?.role;
+  console.log(role, " role from dashboard sidebar");
+
+  const menuItems =
+    role === "writer"
+      ? writerMenu
+      : role === "reader"
+        ? readerMenu
+        : role === "admin"
+          ? adminMenu
+          : null;
+
   return (
     <div>
       {" "}
@@ -113,7 +182,7 @@ const DashboardSidebar = ({ children }) => {
               );
             })} */}
 
-            {writerMenu.map(({ key, label, icon: Icon, href }) => {
+            {menuItems?.map(({ key, label, icon: Icon, href }) => {
               //   const targetPath = getPath(key);
               //   const isActive =
               //     pathname === targetPath ||
