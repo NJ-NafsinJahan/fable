@@ -17,10 +17,9 @@ import { PiNotebookBold } from "react-icons/pi";
 import { useForm } from "react-hook-form";
 import { authClient } from "@/lib/auth-client";
 import toast from "react-hot-toast";
-import { uploadImage } from "../utils/uploadImage";
 import { useRouter } from "next/navigation";
 
-export default function RegisterPage() {
+export default function LogInPage() {
   const router = useRouter();
   const {
     register,
@@ -30,35 +29,24 @@ export default function RegisterPage() {
 
   // for onSubmit
   const onSubmit = async (data) => {
-    console.log(data.image, "data from register pg");
-    // return;
-    // *****
-    // Upload image to imgBB
-    const imageFile = data.image[0];
-    // console.log(imageFile, "image file");
-
-    const imageUrl = await uploadImage(imageFile); //reUsable uploadImage function call
-    // console.log(imageUrl, "Image Url");
+    console.log(data, "data from logIn pg");
     // return;
 
-    const { data: signUpData, error: signUpError } =
-      await authClient.signUp.email({
+    const { data: signInData, error: signInError } =
+      await authClient.signIn.email({
         // ...data,
         email: data.email,
-        name: data.name,
         password: data.password,
-        image: imageUrl,
-        role: data.role,
       });
 
-    // console.log(signUpData, signUpError, "signUp data");
+    // console.log(signInData, signInError, "signIn data");
 
-    if (signUpError) {
-      toast.error("Registration not succeed...");
+    if (signInError) {
+      toast.error("LogIn is not succeed...");
     } else {
-      toast.success("Registration is Successful !");
+      toast.success("LogIn is Successful !");
       //   redirect("/");
-      //   router.push("/");
+      router.push("/");
     }
   };
 
@@ -91,35 +79,16 @@ export default function RegisterPage() {
           </div>
 
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight bg-linear-to-r from-cyan-400 via-blue-600 to-indigo-700  bg-clip-text text-transparent mt-3">
-            Create an Account
+            Welcome Back !
           </h1>
           <p className="text-slate-400 text-xs sm:text-sm mt-1 max-w-xs sm:max-w-none italic">
-            Join Fable to read premium ebooks or manage your own creations.
+            "Log in to Fable to explore premium ebooks and manage your shelf."
           </p>
         </CardHeader>
 
         <CardBody className="gap-4 p-0 sm:p-2">
           {/* Form */}
           <Form onSubmit={handleSubmit(onSubmit)} className="space-y-4 w-full">
-            {/* name */}
-            <div>
-              <Label
-                htmlFor="name"
-                className="text-xs font-semibold text-slate-300 block mb-1.5"
-              >
-                Full Name
-              </Label>
-              <Input
-                {...register("name", { required: "Name is Required" })}
-                id="name"
-                placeholder="John Doe"
-                className="w-full bg-slate-900/50 border-white/10 hover:border-cyan-500  text-white"
-              />
-              {errors.name && (
-                <p className="text-red-500">{errors.name.message}</p>
-              )}
-            </div>
-
             {/* email address */}
             <div>
               <Label
@@ -137,27 +106,6 @@ export default function RegisterPage() {
               />
               {errors.email && (
                 <p className="text-red-500">{errors.email.message}</p>
-              )}
-            </div>
-
-            {/* image */}
-            <div>
-              <Label
-                htmlFor="image"
-                className="text-xs font-semibold text-slate-300 block mb-1.5"
-              >
-                Profile Image URL
-              </Label>
-              <Input
-                {...register("image", { required: "Image is Required" })}
-                type="file"
-                accept="image/*"
-                id="image"
-                placeholder="https://example.com/avatar.jpg"
-                className="w-full bg-slate-900/50 border-white/10 hover:border-cyan-500 text-white"
-              />
-              {errors.image && (
-                <p className="text-red-500">{errors.image.message}</p>
               )}
             </div>
 
@@ -185,69 +133,18 @@ export default function RegisterPage() {
               )}
             </div>
 
-            {/* role select */}
-            <div className="w-full flex flex-col gap-1.5">
-              <Label
-                htmlFor="role"
-                className="text-xs font-semibold text-slate-300 block"
-              >
-                Select Role
-              </Label>
-
-              <div className="relative w-full block">
-                <select
-                  id="role"
-                  {...register("role", { required: "Role is required" })}
-                  className="block w-full max-w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 h-12 text-white text-sm outline-none transition-all hover:border-cyan-500/50 focus:border-cyan-500 appearance-none cursor-pointer pr-10"
-                >
-                  <option value="reader" className="bg-slate-950 text-white">
-                    Reader (Read Books)
-                  </option>
-                  <option value="writer" className="bg-slate-950 text-white">
-                    Writer (Publish Ebooks)
-                  </option>
-                  <option value="admin" className="bg-slate-950 text-white">
-                    Admin
-                  </option>
-                </select>
-
-                {/* arrow icon */}
-                <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none text-slate-400">
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M19 9l-7 7-7-7"
-                    />
-                  </svg>
-                </div>
-              </div>
-
-              {errors.role && (
-                <p className="text-red-500 text-xs mt-0.5 pl-1">
-                  {errors.role.message}
-                </p>
-              )}
-            </div>
-
             <Button
               type="submit"
               className="w-full bg-linear-to-r from-cyan-400 via-blue-600 to-indigo-700  text-white font-bold h-12 shadow-lg shadow-pink-500/10 hover:shadow-pink-500/20 rounded-xl transition-transform active:scale-95 cursor-pointer mt-2"
             >
-              Create Account
+              Log In
             </Button>
           </Form>
 
           <div className="flex items-center my-4">
             <div className="grow border-t border-white/5" />
             <span className="mx-4 text-[10px] sm:text-xs text-slate-500 font-bold uppercase tracking-wider whitespace-nowrap">
-              Or Sign Up With
+              Or LogIn With
             </span>
             <div className="grow border-t border-white/5" />
           </div>
@@ -260,12 +157,12 @@ export default function RegisterPage() {
           </Button>
 
           <p className="text-center text-xs sm:text-sm text-slate-400 mt-6">
-            Already have an account?{" "}
+            Don't have an account?{" "}
             <Link
-              href="/login"
+              href="/register"
               className="text-cyan-500 hover:text-cyan-400 font-semibold hover:underline"
             >
-              Log In
+              Sign Up
             </Link>
           </p>
         </CardBody>
