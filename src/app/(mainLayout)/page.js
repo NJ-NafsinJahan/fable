@@ -1,3 +1,4 @@
+import EbookGenres from "@/components/EbookGenres";
 import Hero from "@/components/Hero";
 import TopWriters from "@/components/TopWriters";
 
@@ -7,6 +8,7 @@ export default function Homepage() {
       {/* Home Page page */}
       <Hero></Hero>
       <TopWriters></TopWriters>
+      <EbookGenres></EbookGenres>
     </div>
   );
 }
