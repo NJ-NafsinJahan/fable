@@ -1,41 +1,74 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-import {
-  Card,
-  CardHeader,
-  Input,
-  TextArea,
-  Button,
-  Form,
-  Label,
-} from "@heroui/react";
+import { Card, CardHeader, Input, TextArea, Button, Form } from "@heroui/react";
 import DashboardHeader from "@/components/DashboardHeader";
 import { useForm } from "react-hook-form";
 import { uploadImage } from "@/app/utils/uploadImage";
 import { useSession } from "@/lib/auth-client";
+import { addWriter } from "@/lib/api/writer/action";
+import { updateWriter } from "@/lib/api/writer/action";
+import toast from "react-hot-toast";
+import { myWriterProfile } from "@/lib/api/writer/data";
 
 const WriterProfile = () => {
   const { data: session } = useSession();
-  console.log(session, "from writer profile");
+  //   console.log(session, "from writer profile");
+  const [myProfile, setMyProfile] = useState(null);
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
+  useEffect(() => {
+    const setWriterData = async () => {
+      const writer = await myWriterProfile(session?.user?.email);
+      setMyProfile(writer);
+    };
+    setWriterData();
+  }, [session]);
+  console.log(myProfile, "myProfile");
+
   //   onsubmit
   const onSubmit = async (data) => {
     console.log(data, "data from writer profile pg");
-    // return;
-    // *****
+
     // Upload image to imgBB
     const imageFile = data.image[0];
     // console.log(imageFile, "image file");
 
     const imageUrl = await uploadImage(imageFile); //reUsable uploadImage function call
-    // console.log(imageUrl, "Image Url");
-    // return;
+    console.log(imageUrl, "Image Url");
+
+    //   for api call
+    const writerData = {
+      writerName: data?.writerName,
+      image: imageUrl,
+      website: data?.website,
+      bio: data?.bio,
+      writerEmail: session?.user?.email,
+      // createdAt: new Date(),
+      // status: "active",
+    };
+    // console.log(writerData, "writerData");
+
+    if (!myProfile) {
+      const resData = await addWriter(writerData); //mongodb te data send kra
+      console.log(resData, "resData");
+
+      if (resData?.success || resData?.result?.insertedId) {
+        toast.success("Profile added successfully...!");
+      }
+    } else {
+      const updatedResData = await updateWriter(writerData, myProfile._id);
+      if (
+        updatedResData?.success ||
+        updatedResData?.result?.modifiedCount > 0
+      ) {
+        toast.success("Profile Data Updated successfully...!");
+      }
+    }
   };
 
   const [formData, setFormData] = useState({
@@ -50,18 +83,6 @@ const WriterProfile = () => {
     const { id, value } = e.target;
     setFormData((prev) => ({ ...prev, [id]: value }));
   };
-
-  //   const handleSubmit = (e) => {
-  //     e.preventDefault();
-
-  //     const finalProfileData = {
-  //       ...formData,
-  //       createdAt: new Date(),
-  //       status: "active",
-  //     };
-
-  //   console.log("Submitting Writer Profile Data:", finalProfileData);
-  // এখানে আপনার এপিআই সাবমিটের কোড লিখবেন
 
   return (
     <div className="p-1">
@@ -105,13 +126,14 @@ const WriterProfile = () => {
                 </label>
 
                 <Input
+                  defaultValue={myProfile?.writerName}
                   {...register("writerName", {
                     required: "Writer Name is Required",
                   })}
                   id="writerName"
                   placeholder="e.g. Jane Doe"
                   required
-                  value={formData.writerName}
+                  //   value={formData.writerName}
                   onChange={handleChange}
                   className="w-full text-white bg-slate-900/50 border-white/10 hover:border-cyan-500/50 focus-within:border-cyan-500!"
                 />
@@ -121,20 +143,32 @@ const WriterProfile = () => {
               </div>
 
               {/* Writer Email */}
-              <Input
-                {...register("writerEmail", { required: "Email is Required" })}
-                id="writerEmail"
-                type="email"
-                label="Writer Email"
-                placeholder="e.g. jane@example.com"
-                required
-                value={formData.writerEmail}
-                onChange={handleChange}
-                className="w-full text-white bg-slate-900/50 border-white/10 hover:border-cyan-500/50 focus-within:border-cyan-500!"
-              />
-              {errors.email && (
-                <p className="text-red-500">{errors.email.message}</p>
-              )}
+              <div className="w-full space-y-2">
+                <label
+                  htmlFor="writerEmail"
+                  className="text-sm font-medium text-slate-300 block"
+                >
+                  Email <span className="text-rose-500">*</span>
+                </label>
+
+                <Input
+                  defaultValue={myProfile?.writerEmail}
+                  {...register("writerEmail", {
+                    required: "Email is Required",
+                  })}
+                  id="writerEmail"
+                  type="email"
+                  label="Writer Email"
+                  placeholder="e.g. jane@example.com"
+                  required
+                  //   value={formData.writerEmail}
+                  onChange={handleChange}
+                  className="w-full text-white bg-slate-900/50 border-white/10 hover:border-cyan-500/50 focus-within:border-cyan-500!"
+                />
+                {errors.email && (
+                  <p className="text-red-500">{errors.email.message}</p>
+                )}
+              </div>
 
               {/* Profile Image URL */}
               {/* <Input
@@ -147,47 +181,75 @@ const WriterProfile = () => {
                 className="w-full bg-slate-900/50 border-white/10 hover:border-cyan-500/50 focus-within:border-cyan-500!"
               /> */}
 
-              <Input
-                {...register("image", { required: "Image is Required" })}
-                type="file"
-                accept="image/*"
-                id="image"
-                placeholder="https://example.com/avatar.jpg"
-                className="w-full bg-slate-900/50 border-white/10 hover:border-cyan-500 text-white"
-              />
-              {errors.image && (
-                <p className="text-red-500">{errors.image.message}</p>
-              )}
+              <div className="w-full space-y-2">
+                <label
+                  htmlFor="image"
+                  className="text-sm font-medium text-slate-300 block"
+                >
+                  Image <span className="text-rose-500">*</span>
+                </label>
+
+                <Input
+                  {...register("image", { required: "Image is Required" })}
+                  type="file"
+                  accept="image/*"
+                  id="image"
+                  placeholder="https://example.com/avatar.jpg"
+                  className="w-full bg-slate-900/50 border-white/10 hover:border-cyan-500 text-white"
+                />
+                {errors.image && (
+                  <p className="text-red-500">{errors.image.message}</p>
+                )}
+              </div>
 
               {/* Website */}
-              <Input
-                {...register("website", { required: "Website is Required" })}
-                id="website"
-                label="Website / Portfolio"
-                placeholder="e.g. writer.com"
-                required
-                value={formData.website}
-                onChange={handleChange}
-                className="w-full text-white bg-slate-900/50 border-white/10 hover:border-cyan-500/50 focus-within:border-cyan-500!"
-              />
-              {errors.website && (
-                <p className="text-red-500">{errors.website.message}</p>
-              )}
+              <div className="w-full space-y-2">
+                <label
+                  htmlFor="website"
+                  className="text-sm font-medium text-slate-300 block"
+                >
+                  Portfolio Website <span className="text-rose-500">*</span>
+                </label>
+
+                <Input
+                  defaultValue={myProfile?.website}
+                  {...register("website", { required: "Website is Required" })}
+                  id="website"
+                  label="Website / Portfolio"
+                  placeholder="e.g. writer.com"
+                  required
+                  //   value={formData.website}
+                  onChange={handleChange}
+                  className="w-full text-white bg-slate-900/50 border-white/10 hover:border-cyan-500/50 focus-within:border-cyan-500!"
+                />
+                {errors.website && (
+                  <p className="text-red-500">{errors.website.message}</p>
+                )}
+              </div>
 
               {/* Bio */}
-              <TextArea
-                {...register("bio", { required: "Bio is Required" })}
-                id="bio"
-                label="Biography"
-                placeholder="Tell your readers about yourself and your writing style..."
-                required
-                value={formData.bio}
-                onChange={handleChange}
-                className="w-full  bg-slate-900/50 border border-white/10 rounded-xl focus:outline-none text-white"
-              />
-              {errors.bio && (
-                <p className="text-red-500">{errors.bio.message}</p>
-              )}
+              <div className="w-full space-y-2">
+                <label
+                  htmlFor="bio"
+                  className="text-sm font-medium text-slate-300 block"
+                >
+                  Biography <span className="text-rose-500">*</span>
+                </label>
+                <TextArea
+                  defaultValue={myProfile?.bio}
+                  {...register("bio", { required: "Bio is Required" })}
+                  id="bio"
+                  label="Biography"
+                  placeholder="Tell your readers about yourself and your writing style..."
+                  required
+                  //   value={formData.bio}
+                  onChange={handleChange}
+                  className="w-full  bg-slate-900/50 border border-white/10 rounded-xl focus:outline-none text-white"
+                />
+                {errors.bio && (
+                  <p className="text-red-500">{errors.bio.message}</p>
+                )}
+              </div>
 
               {/* Action Button */}
               <div className="flex gap-4 pt-2">
