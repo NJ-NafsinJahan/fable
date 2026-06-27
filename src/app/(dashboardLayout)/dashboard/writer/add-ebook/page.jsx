@@ -114,7 +114,8 @@ const addEbookPage = () => {
                     </span>
                   )}
                 </div>
-                {/* book title */}
+
+                {/* writer name */}
                 <div className="w-full">
                   <label
                     htmlFor="writerName"
@@ -123,16 +124,16 @@ const addEbookPage = () => {
                     Writer Name <span className="text-rose-500">*</span>
                   </label>
                   <Input
-                    {...register("title", {
+                    {...register("name", {
                       required: "Name is Required !",
                     })}
                     label="Writer Name"
                     placeholder="e.g. Mr. Writer"
                     className="w-full text-white bg-slate-900/50 border-white/10"
                   />
-                  {errors.title && (
+                  {errors.name && (
                     <span className="text-rose-500 text-xs mt-1 block">
-                      {errors.title.message}
+                      {errors.name.message}
                     </span>
                   )}
                 </div>
