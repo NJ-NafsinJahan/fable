@@ -1,7 +1,9 @@
+"use client";
 import React from "react";
 
 import { Card, Button } from "@heroui/react";
 import { FaCalendarAlt, FaCrown, FaDollarSign, FaUsers } from "react-icons/fa";
+import DashboardHeader from "@/components/DashboardHeader";
 
 const WriterDashboard = () => {
   const stats = {

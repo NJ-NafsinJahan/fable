@@ -1,11 +1,18 @@
 "use client";
 import React from "react";
 import DashboardHeader from "@/components/DashboardHeader";
+import { useSession } from "@/lib/auth-client";
 import { useForm } from "react-hook-form";
+import { uploadImage } from "@/app/utils/uploadImage";
 import { Card, CardHeader, Input, Button, Form } from "@heroui/react";
+import { addEbook } from "@/lib/api/ebooks/action";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 // { writerSession }
 const addEbookPage = () => {
+  const router = useRouter();
+  const { data: session } = useSession();
   const CATEGORIES = [
     "Fiction",
     "Sci-Fi",
@@ -25,37 +32,33 @@ const addEbookPage = () => {
     formState: { errors },
   } = useForm();
 
-  // const {
-  //   register,
-  //   handleSubmit,
-  //   formState: { errors },
-  // } = useForm({
-  //   defaultValues: {
-  //     writerName: writerSession?.user?.name || "",
-  //     writerId: writerSession?.user?.id || "",
-  //     status: "Available",
-  //   },
-  // });
-
   // form submit function
   const onSubmit = async (data) => {
     console.log(data, "form data");
 
-    // const imageFile = data.coverImage[0]; //  for send to imgBB
+    // Upload image to imgBB
+    const imageFile = data.coverImage[0];
+    // console.log(imageFile, "image file");
 
-    // const ebookData = {
-    //   title: data.title,
-    //   writerName: data.writerName,
-    //   writerId: data.writerId,
-    //   description: data.description,
-    //   price: parseFloat(data.price),
-    //   category: data.category,
-    //   status: data.status,
-    //   coverImage: "https://i.ibb.co/.../placeholder.jpg", // imgBB URL
-    //   uploadedAt: new Date().toISOString(),
-    // };
+    const imageUrl = await uploadImage(imageFile); //reUsable uploadImage function call
+    console.log(data?.coverImage, "Image Url from add book");
 
-    // console.log(ebookData, "from add ebook");
+    // FOR UPDATE DATE
+    delete data?.coverImage;
+    const updateData = {
+      ...data,
+      coverImage: imageUrl,
+      writerEmail: session?.user?.email,
+    };
+
+    // api call
+    const result = await addEbook(updateData);
+    console.log(result, "add ebook");
+
+    if (result.insertedId) {
+      toast.success("Ebook added Successfully..!");
+      router.push("/ebooks");
+    }
   };
   return (
     <div>

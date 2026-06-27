@@ -18,5 +18,3 @@ export const updateWriter = async (data, id) => {
   );
   return resData;
 };
-
-// bookMark add kra jbe
