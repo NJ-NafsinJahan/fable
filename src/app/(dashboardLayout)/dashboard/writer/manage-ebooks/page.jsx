@@ -3,7 +3,7 @@
 import { myEbooks } from "@/lib/api/ebooks/data";
 import { useSession } from "@/lib/auth-client";
 import React, { useEffect, useState } from "react";
-import { FiEye, FiEdit2, FiBarChart2, FiTrash2 } from "react-icons/fi";
+import { FiEye, FiEdit2, FiTrash2 } from "react-icons/fi";
 
 const ManageEbook = () => {
   const { data: session } = useSession();
