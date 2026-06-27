@@ -1,10 +1,10 @@
 ## 📚 **Fable**
 
-## 🚀 – Ebook Sharing Platform
+## 🚀 – A Ebook Sharing Platform
 
 ## 📋 OverView:
 
-- Fable is a digital platform that connects ebook lovers, readers, and collectors with talented writers. The platform allows users to browse, discover, and read original ebooks. Writers can upload and manage their creations after a one-time verification payment, while an admin oversees the entire system.
+Fable is a digital platform that connects ebook lovers, readers, and collectors with talented writers. The platform allows users to browse, discover, and read original ebooks. Writers can upload and manage their creations after a one-time verification payment, while an admin oversees the entire system.
 
 ## 🧩 key features of this project
 
@@ -24,7 +24,7 @@
 
 ## ✨ Why this will grate for you?
 
-- Traditional ebook reading is often limited to bookstores or libraries. An online ebook sharing platform democratizes access to literature, enables emerging writers to reach global audiences, and provides a secure, streamlined reading experience. The project demonstrates advanced MERN stack concepts including role-based access, payment integration, and interactive features and analytics.
+Traditional ebook reading is often limited to bookstores or libraries. An online ebook sharing platform democratizes access to literature, enables emerging writers to reach global audiences, and provides a secure, streamlined reading experience. The project demonstrates advanced MERN stack concepts including role-based access, payment integration, and interactive features and analytics.
 
 ## ⚙️ Technologies Used
 
