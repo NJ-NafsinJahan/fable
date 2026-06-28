@@ -1,4 +1,4 @@
-// import { deleteEvent } from "@/lib/api/ebooks/action";
+import { deleteEbook } from "@/lib/api/ebooks/action";
 import { Button, Modal } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
@@ -12,7 +12,7 @@ const DeleteEbookModal = ({ isDeleteOpen, setIsDeleteOpen, id }) => {
 
     if (res?.deletedCount > 0) {
       router.refresh();
-      toast.success("Event deleted successfully");
+      toast.success("Ebook deleted successfully");
       setIsDeleteOpen(false);
     }
   };
