@@ -2,9 +2,10 @@ import Image from "next/image";
 import React from "react";
 import { Card, CardFooter, Button, Chip } from "@heroui/react";
 import { FaUser, FaRegEye } from "react-icons/fa";
+import Link from "next/link";
 
 const EbookCard = ({ ebook }) => {
-  const { coverImage, title, name, price, status, category } = ebook;
+  const { coverImage, title, name, price, status, category, _id } = ebook;
 
   // Status Badge
   const isSold = status?.toLowerCase() === "sold";
@@ -52,7 +53,7 @@ const EbookCard = ({ ebook }) => {
       </div>
 
       {/* Content Section */}
-      <div className="p-4 flex flex-col gap-1.5 justify-between">
+      <div className=" flex flex-col gap-1.5 justify-between">
         <div>
           <h3
             className="text-white font-bold text-base md:text-lg line-clamp-1"
@@ -68,15 +69,20 @@ const EbookCard = ({ ebook }) => {
       </div>
 
       {/* Footer Section */}
-      <CardFooter className="p-4 pt-0 flex items-center justify-between gap-2 border-t border-white/5 mt-2">
+      <CardFooter className="p-4 pt-3 flex items-center justify-between gap-2 border-t border-white/5 mt-2">
         <span className="text-cyan-400 font-extrabold text-lg">${price}</span>
-        <Button
-          size="sm"
-          endContent={<FaRegEye />}
-          className="bg-linear-to-r from-cyan-500 to-indigo-600 text-white font-medium rounded-xl shadow-lg shadow-cyan-500/20"
-        >
-          View Details
-        </Button>
+
+        {/* view details btn */}
+
+        <Link href={`/ebooks/${_id}`}>
+          <Button
+            size="sm"
+            endContent={<FaRegEye />}
+            className="bg-linear-to-r from-cyan-500 to-indigo-600 text-white font-medium rounded-xl shadow-lg shadow-cyan-500/20"
+          >
+            View Details
+          </Button>
+        </Link>
       </CardFooter>
     </Card>
   );
