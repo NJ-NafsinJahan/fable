@@ -1,5 +1,4 @@
-import React from "react";
-
+import React, { useEffect } from "react";
 import {
   Button,
   Card,
@@ -33,49 +32,46 @@ const EditEbookModal = ({ isModalOpen, setIsModalOpen, editingEbook }) => {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm();
+
+  useEffect(() => {
+    if (editingEbook) {
+      setValue("title", editingEbook.title);
+      setValue("name", editingEbook.name);
+      setValue("price", editingEbook.price);
+      setValue("uploadedDate", editingEbook.uploadedDate);
+      setValue("description", editingEbook.description);
+      setValue("category", editingEbook.category);
+      setValue("status", editingEbook.status);
+    }
+  }, [editingEbook, setValue]);
 
   // form submit function
   const onSubmit = async (data) => {
     console.log(data, "form data");
 
-    // Upload image to imgBB
-    // const imageFile = data.coverImage[0];
-    // console.log(imageFile, "image file");
-
-    // const imageUrl = await uploadImage(imageFile); //reUsable uploadImage function call
-    console.log(data?.coverImage, "Image Url from add book");
-
     // FOR UPDATE DATE
     delete data?.coverImage;
     const updateData = {
       ...data,
-      //   coverImage: imageUrl,
-      //   writerEmail: session?.user?.email,
     };
 
     if (data?.coverImage) {
       const imageFile = data.coverImage[0];
-      const imageUrl = await uploadImage(imageFile); //reUsable uploadImage function call
+      const imageUrl = await uploadImage(imageFile);
+      updateData.coverImage = imageUrl;
     }
 
-    // api call
-    const result = await addEbook(updateData);
-    console.log(result, "add ebook");
-
-    if (result.insertedId) {
-      toast.success("Ebook added Successfully..!");
-      //   router.push("/ebooks");
-    }
+    // api call - (নিশ্চিত হয়ে নিন addEbook নাকি updateEbook ফাংশন ব্যবহার করবেন)
+    // const result = await updateEbook(updateData);
   };
 
   return (
     <div>
-      {" "}
       <Modal isOpen={isModalOpen} onOpenChange={setIsModalOpen}>
         <Modal.Backdrop>
           <Modal.Container>
-            {/* ******** */}
             <Modal.Dialog className="dark text-white bg-slate-950 border border-white/10 p-2 rounded-2xl w-full max-w-lg mx-auto">
               <Card
                 className="border border-white/5 bg-slate-900/40 backdrop-blur-xl shadow-2xl rounded-2xl flex flex-col max-h-[85vh]"
@@ -83,7 +79,7 @@ const EditEbookModal = ({ isModalOpen, setIsModalOpen, editingEbook }) => {
               >
                 <CardHeader className="flex flex-col gap-1 pb-4 border-b border-white/5 p-6">
                   <h3 className="text-xl font-bold text-white">
-                    Publish a New Ebook
+                    {editingEbook ? "Edit Ebook" : "Publish a New Ebook"}
                   </h3>
                   <p className="text-slate-400 text-xs">
                     Complete the form by providing a book cover image and the
@@ -127,6 +123,7 @@ const EditEbookModal = ({ isModalOpen, setIsModalOpen, editingEbook }) => {
 
                     {/* Category & Status */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+                      {/* Category Dropdown */}
                       <div className="flex flex-col gap-2 w-full">
                         <label className="text-sm font-medium text-slate-300">
                           Category
@@ -136,8 +133,15 @@ const EditEbookModal = ({ isModalOpen, setIsModalOpen, editingEbook }) => {
                           className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-3 h-11 text-white text-sm"
                         >
                           <option value="">Select Category</option>
+                          {CATEGORIES.map((cat) => (
+                            <option key={cat} value={cat}>
+                              {cat}
+                            </option>
+                          ))}
                         </select>
                       </div>
+
+                      {/* Status Dropdown */}
                       <div className="flex flex-col gap-2 w-full">
                         <label className="text-sm font-medium text-slate-300">
                           Status
@@ -146,7 +150,12 @@ const EditEbookModal = ({ isModalOpen, setIsModalOpen, editingEbook }) => {
                           {...register("status")}
                           className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-3 h-11 text-white text-sm"
                         >
-                          <option>Active</option>
+                          <option value="">Select Status</option>
+                          {STATUS_OPTIONS.map((status) => (
+                            <option key={status} value={status}>
+                              {status}
+                            </option>
+                          ))}
                         </select>
                       </div>
                     </div>
@@ -205,7 +214,7 @@ const EditEbookModal = ({ isModalOpen, setIsModalOpen, editingEbook }) => {
                       type="submit"
                       className="bg-linear-to-r from-cyan-500 to-indigo-600 text-white w-full"
                     >
-                      Upload Ebook
+                      {editingEbook ? "Update Ebook" : "Upload Ebook"}
                     </Button>
                   </Form>
                 </div>
