@@ -7,10 +7,13 @@ import React, { useEffect, useState } from "react";
 import { FiEye, FiEdit2, FiTrash2 } from "react-icons/fi";
 import { Button, TableCell } from "@heroui/react";
 import { FaEdit, FaTrash } from "react-icons/fa";
+import DeleteEbookModal from "@/components/DeleteEbookModal";
 
 const ManageEbook = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingEbook, setEditingEbook] = useState(null);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(null);
+  const [deleteId, setDeletedId] = useState(null);
   const [ebooks, setEbooks] = useState([]);
   const [loadingEvents, setLoadingEvents] = useState(false);
   const { data: session } = useSession();
@@ -203,6 +206,13 @@ const ManageEbook = () => {
         setIsModalOpen={setIsModalOpen}
         editingEbook={editingEbook}
       ></EditEbookModal>
+
+      {/* DELETE MODAL */}
+      <DeleteEbookModal
+        isDeleteOpen={isDeleteOpen}
+        setIsDeleteOpen={setIsDeleteOpen}
+        id={deleteId}
+      ></DeleteEbookModal>
     </div>
   );
 };
