@@ -13,6 +13,7 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { FaImage } from "react-icons/fa";
 import { uploadImage } from "@/app/utils/uploadImage";
+import { updateEbook } from "@/lib/api/ebooks/action";
 
 const EditEbookModal = ({ isModalOpen, setIsModalOpen, editingEbook }) => {
   const CATEGORIES = [
@@ -63,8 +64,12 @@ const EditEbookModal = ({ isModalOpen, setIsModalOpen, editingEbook }) => {
       updateData.coverImage = imageUrl;
     }
 
-    // api call - (নিশ্চিত হয়ে নিন addEbook নাকি updateEbook ফাংশন ব্যবহার করবেন)
-    // const result = await updateEbook(updateData);
+    const result = await updateEbook(updateData, editingEbook?._id);
+    if (result.modifiedCount) {
+      setIsModalOpen(false);
+      toast.success("Ebook updated Successfully..!");
+      router.refresh();
+    }
   };
 
   return (
