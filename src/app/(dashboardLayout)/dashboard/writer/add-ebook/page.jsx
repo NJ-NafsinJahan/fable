@@ -55,9 +55,22 @@ const addEbookPage = () => {
     const result = await addEbook(updateData);
     console.log(result, "add ebook");
 
-    if (result.insertedId) {
-      toast.success("Ebook added Successfully..!");
+    // if (result.insertedId) {
+    //   toast.success("Ebook added Successfully..!");
+    //   router.push("/ebooks");
+    // }
+    if (
+      result &&
+      (result.insertedId || result.acknowledged || result.success || result._id)
+    ) {
+      toast.success("Ebook added Successfully..!", { duration: 2000 });
+
       router.push("/ebooks");
+    } else {
+      console.log("Condition didn't match!");
+      toast.error("Something went wrong or response mismatch!", {
+        duration: 3000,
+      });
     }
   };
   return (
