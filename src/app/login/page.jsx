@@ -49,6 +49,11 @@ export default function LogInPage() {
       router.push("/");
     }
   };
+  const handleGoogleSignin = async () => {
+    const data = await authClient.signIn.social({
+      provider: "google",
+    });
+  };
 
   return (
     <div className="bg-[#030712] min-h-screen w-full flex items-center justify-center pt-32 pb-16 px-4 md:px-6 relative overflow-hidden">
@@ -150,6 +155,7 @@ export default function LogInPage() {
           </div>
 
           <Button
+            onClick={handleGoogleSignin}
             variant="bordered"
             className="w-full border-white/10 hover:bg-white/5 hover:border-white/20 text-white font-semibold h-11 rounded-xl flex items-center justify-center gap-2 cursor-pointer transition-colors"
           >

@@ -26,7 +26,10 @@ export default function RegisterPage() {
     register,
     handleSubmit,
     formState: { errors },
+    watch,
   } = useForm();
+
+  const passwordValue = watch("password");
 
   // for onSubmit
   const onSubmit = async (data) => {
@@ -60,6 +63,11 @@ export default function RegisterPage() {
       //   redirect("/");
       router.push("/");
     }
+  };
+  const handleGoogleSignin = async () => {
+    const data = await authClient.signIn.social({
+      provider: "google",
+    });
   };
 
   return (
@@ -162,6 +170,7 @@ export default function RegisterPage() {
             </div>
 
             {/* password */}
+            {/* password */}
             <div>
               <Label
                 htmlFor="password"
@@ -181,7 +190,35 @@ export default function RegisterPage() {
                 className="w-full bg-slate-900/50 border-white/10 hover:border-cyan-500  text-white"
               />
               {errors.password && (
-                <p className="text-red-500">{errors.password.message}</p>
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.password.message}
+                </p>
+              )}
+            </div>
+
+            {/* Confirm Password (নতুন যোগ করা হলো) */}
+            <div>
+              <Label
+                htmlFor="confirmPassword"
+                className="text-xs font-semibold text-slate-300 block mb-1.5 mt-4" // একটু গ্যাপের জন্য mt-4 দেওয়া হয়েছে
+              >
+                Confirm Password
+              </Label>
+              <Input
+                {...register("confirmPassword", {
+                  required: "Confirm Password is Required",
+                  validate: (value) =>
+                    value === passwordValue || "Passwords do not match!", // <-- এটি পাসওয়ার্ড ম্যাচ করাবে
+                })}
+                id="confirmPassword"
+                placeholder="••••••••"
+                type="password"
+                className="w-full bg-slate-900/50 border-white/10 hover:border-cyan-500  text-white"
+              />
+              {errors.confirmPassword && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.confirmPassword.message}
+                </p>
               )}
             </div>
 
@@ -253,6 +290,7 @@ export default function RegisterPage() {
           </div>
 
           <Button
+            onClick={handleGoogleSignin}
             variant="bordered"
             className="w-full border-white/10 hover:bg-white/5 hover:border-white/20 text-white font-semibold h-11 rounded-xl flex items-center justify-center gap-2 cursor-pointer transition-colors"
           >
