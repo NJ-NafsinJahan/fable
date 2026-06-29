@@ -2,7 +2,7 @@
 import React from "react";
 
 import DashboardSidebar from "@/components/DashboardSidebar";
-import { Toaster } from "react-hot-toast";
+// import { Toaster } from "react-hot-toast";
 
 const DashboardLayout = ({ children }) => {
   return (
@@ -17,7 +17,7 @@ const DashboardLayout = ({ children }) => {
           {children}
         </div>
       </main>
-      <Toaster />
+      {/* <Toaster /> */}
     </div>
   );
 };

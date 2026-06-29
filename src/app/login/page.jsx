@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "motion/react";
+import { useState } from "react";
 
 import {
   Card,
@@ -21,38 +22,58 @@ import { useRouter } from "next/navigation";
 
 export default function LogInPage() {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-  // for onSubmit
   const onSubmit = async (data) => {
-    console.log(data, "data from logIn pg");
-    // return;
+    if (isLoading) return;
+    setIsLoading(true);
 
-    const { data: signInData, error: signInError } =
-      await authClient.signIn.email({
-        // ...data,
-        email: data.email,
-        password: data.password,
-      });
+    try {
+      const { data: signInData, error: signInError } =
+        await authClient.signIn.email({
+          email: data.email,
+          password: data.password,
+        });
 
-    // console.log(signInData, signInError, "signIn data");
+      if (signInError) {
+        toast.dismiss();
+        toast.error(signInError.message || "LogIn is not succeed...", {
+          duration: 2000,
+        });
+      } else {
+        toast.dismiss();
+        toast.success("LogIn is Successful !", {
+          duration: 2000,
+        });
 
-    if (signInError) {
-      toast.error("LogIn is not succeed...");
-    } else {
-      toast.success("LogIn is Successful !");
-      //   redirect("/");
-      router.push("/");
+        setTimeout(() => {
+          router.push("/");
+          router.refresh();
+        }, 500);
+      }
+    } catch (err) {
+      toast.dismiss();
+      toast.error("Something went wrong!");
+    } finally {
+      setIsLoading(false);
     }
   };
+
   const handleGoogleSignin = async () => {
-    const data = await authClient.signIn.social({
-      provider: "google",
-    });
+    try {
+      await authClient.signIn.social({
+        provider: "google",
+        callbackURL: "/",
+      });
+    } catch (err) {
+      toast.error("Google sign in failed");
+    }
   };
 
   return (
@@ -62,7 +83,6 @@ export default function LogInPage() {
 
       <Card className="w-full max-w-lg border border-white/5 bg-slate-950/70 backdrop-blur-xl shadow-2xl p-4 sm:p-6 z-10">
         <CardHeader className="flex flex-col gap-1 items-center pb-6 text-center">
-          {/* LOGO SECTION */}
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 bg-linear-to-r from-cyan-400 via-blue-600 to-indigo-700 rounded-lg flex items-center justify-center font-bold text-lg shadow-[0_0_15px_rgba(59,130,246,0.5)]">
               <PiNotebookBold size="20px" color="white" />
@@ -83,7 +103,7 @@ export default function LogInPage() {
             </motion.span>
           </div>
 
-          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight bg-linear-to-r from-cyan-400 via-blue-600 to-indigo-700  bg-clip-text text-transparent mt-3">
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight bg-linear-to-r from-cyan-400 via-blue-600 to-indigo-700 bg-clip-text text-transparent mt-3">
             Welcome Back !
           </h1>
           <p className="text-slate-400 text-xs sm:text-sm mt-1 max-w-xs sm:max-w-none italic">
@@ -92,9 +112,7 @@ export default function LogInPage() {
         </CardHeader>
 
         <CardBody className="gap-4 p-0 sm:p-2">
-          {/* Form */}
           <Form onSubmit={handleSubmit(onSubmit)} className="space-y-4 w-full">
-            {/* email address */}
             <div>
               <Label
                 htmlFor="email"
@@ -110,11 +128,12 @@ export default function LogInPage() {
                 className="w-full bg-slate-900/50 border-white/10 hover:border-cyan-500 text-white"
               />
               {errors.email && (
-                <p className="text-red-500">{errors.email.message}</p>
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.email.message}
+                </p>
               )}
             </div>
 
-            {/* password */}
             <div>
               <Label
                 htmlFor="password"
@@ -125,24 +144,27 @@ export default function LogInPage() {
               <Input
                 {...register("password", {
                   required: "Password is Required ",
-                  maxLength: 12,
-                  minLength: 6,
+                  maxLength: { value: 12, message: "Max length 12 characters" },
+                  minLength: { value: 6, message: "Min length 6 characters" },
                 })}
                 id="password"
                 placeholder="••••••••"
                 type="password"
-                className="w-full bg-slate-900/50 border-white/10 hover:border-cyan-500  text-white"
+                className="w-full bg-slate-900/50 border-white/10 hover:border-cyan-500 text-white"
               />
               {errors.password && (
-                <p className="text-red-500">{errors.password.message}</p>
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.password.message}
+                </p>
               )}
             </div>
 
             <Button
+              isLoading={isLoading}
               type="submit"
-              className="w-full bg-linear-to-r from-cyan-400 via-blue-600 to-indigo-700  text-white font-bold h-12 shadow-lg shadow-pink-500/10 hover:shadow-pink-500/20 rounded-xl transition-transform active:scale-95 cursor-pointer mt-2"
+              className="w-full bg-linear-to-r from-cyan-400 via-blue-600 to-indigo-700 text-white font-bold h-12 shadow-lg shadow-pink-500/10 hover:shadow-pink-500/20 rounded-xl transition-transform active:scale-95 cursor-pointer mt-2"
             >
-              Log In
+              {isLoading ? "Logging In..." : "Log In"}
             </Button>
           </Form>
 
