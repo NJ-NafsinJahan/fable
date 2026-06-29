@@ -5,6 +5,7 @@ export const serverMutation = async (path, method, data) => {
   //   console.log(data, "from server mutation");
   //   console.log(baseURL, path, "from server mutation");
 
+  // const res = await fetch(`process.env.NEXT_PUBLIC_SERVER_URL/${path}`, {
   const res = await fetch(`${baseURL}${path}`, {
     method: method,
     headers: {
@@ -17,6 +18,7 @@ export const serverMutation = async (path, method, data) => {
 
 // for delete
 export const deleteMutation = async (path) => {
+  // const res = await fetch(`process.env.NEXT_PUBLIC_SERVER_URL/${path}`, {
   const res = await fetch(`${baseURL}${path}`, {
     method: "DELETE",
   });
@@ -25,6 +27,7 @@ export const deleteMutation = async (path) => {
 
 // for get
 export const serverFetch = async (path) => {
+  // const res = await fetch(`process.env.NEXT_PUBLIC_SERVER_URL/${path}`);
   const res = await fetch(`${baseURL}${path}`);
   return res.json();
 };

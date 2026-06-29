@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { Button, Card, Chip } from "@heroui/react"; // Hero UI v3
+import { Button, Card, Chip } from "@heroui/react";
 import {
   FiArrowLeft,
   FiBookmark,
@@ -8,6 +8,7 @@ import {
   FiCalendar,
   FiBookOpen,
 } from "react-icons/fi";
+import PurchaseButton from "@/components/PurchaseButton";
 
 const EbookDetailsPage = async ({ params }) => {
   const { id } = await params;
@@ -17,8 +18,10 @@ const EbookDetailsPage = async ({ params }) => {
     cache: "no-store",
   });
   const ebookDetails = await res.json();
+  console.log(ebookDetails, "ebook details");
 
   const {
+    _id,
     coverImage,
     title,
     name,
@@ -34,6 +37,36 @@ const EbookDetailsPage = async ({ params }) => {
     month: "long",
     day: "numeric",
   });
+
+  // ****** payment
+
+  // const handlePurchaseEbook = async () => {
+  //   const updateToPurchased = async () => {
+  //     const paymentData = {
+  //       type: "payment",
+  //       totalAmount,
+  //       ebookId: _id,
+  //       ebookTitle: title,
+  //       quantity,
+  //       ebookPrice: price,
+  //     };
+  //     const res = await fetch("/api/checkout_sessions", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({ type: "payment" }),
+  //     });
+  //     const data = await res.json();
+  //     console.log(data, "book payment");
+
+  //     if (data?.url) {
+  //       window.location.href = data.url;
+  //     }
+  //   };
+  // };
+
+  // ****** payment
 
   return (
     <div className="min-h-screen bg-slate-900 text-zinc-100 pt-28 pb-16 px-4  mx-auto selection:bg-primary selection:text-white">
@@ -121,12 +154,22 @@ const EbookDetailsPage = async ({ params }) => {
 
           {/* Action Buttons */}
           <div className="flex justify-center items-center sm:flex-row gap-4 pt-4">
-            <Button
+            {/* ***** */}
+            <PurchaseButton
+              title={ebookDetails.title}
+              price={ebookDetails.price}
+              bookWriterEmail={ebookDetails.writerEmail}
+            />
+
+            {/* <PurchaseButton></PurchaseButton> */}
+            {/* <Button
               size="lg"
               className="font-bold flex-1 bg-linear-to-r from-cyan-400 via-blue-600 to-indigo-700  text-white shadow-xl shadow-primary/20 bg-primary hover:opacity-80 transition-opacity"
             >
               <FiShoppingBag size={20} /> Purchase Now
-            </Button>
+            </Button> */}
+
+            {/* ***** */}
             <Button
               variant="outline"
               size="lg"

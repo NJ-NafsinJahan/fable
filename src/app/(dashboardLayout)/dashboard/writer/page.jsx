@@ -1,11 +1,14 @@
-"use client";
+// "use client";
 import React from "react";
 
 import { Card, Button } from "@heroui/react";
 import { FaCalendarAlt, FaCrown, FaDollarSign, FaUsers } from "react-icons/fa";
 import DashboardHeader from "@/components/DashboardHeader";
+import { auth } from "@/lib/auth";
+import { getUser } from "@/lib/api/session";
+import UpgradePremiumButton from "@/components/UpgradePremiumButton";
 
-const WriterDashboard = () => {
+const WriterDashboard = async () => {
   const stats = {
     totalEvents: 15,
     totalAttendees: 450,
@@ -13,7 +16,11 @@ const WriterDashboard = () => {
     totalSoldTickets: 780,
   };
 
-  const isPremium = false;
+  const user = await getUser();
+  console.log(user);
+  const isPremium = user?.isPremium;
+
+  // const isPremium = true;
 
   return (
     <div className="space-y-6 mt-6 w-full max-w-7xl mx-auto px-1">
@@ -87,7 +94,7 @@ const WriterDashboard = () => {
       </div>
 
       {/* Premium CTA Section */}
-      {!isPremium && (
+      {!isPremium ? (
         <Card
           radius="lg"
           className="border border-yellow-500/10 bg-slate-950 bg-linear-to-br from-yellow-500/5 via-amber-600/5 to-slate-950/50 shadow-2xl relative overflow-hidden"
@@ -106,13 +113,31 @@ const WriterDashboard = () => {
                 and publish unlimited creations.
               </p>
             </div>
+            {/*button  */}
+            <UpgradePremiumButton></UpgradePremiumButton>
 
-            <Button
+            {/* <Button
+              onClick={upgradeToPremium}
               radius="lg"
               className="w-full md:w-auto bg-linear-to-r from-yellow-500 to-amber-500 hover:from-yellow-400 hover:to-amber-400 text-slate-950 font-bold h-11 px-6 shadow-lg shadow-yellow-500/10 transition-all active:scale-98 cursor-pointer"
             >
               Upgrade to Premium
-            </Button>
+            </Button> */}
+          </div>
+        </Card>
+      ) : (
+        <Card className="border border-yellow-500/10 bg-slate-950 bg-linear-to-br from-yellow-500/5 via-amber-600/5 to-slate-950/50 shadow-2xl relative overflow-hidden">
+          <div className="p-8 flex flex-col md:flex-row items-center justify-between gap-6 z-10">
+            <div className="space-y-2">
+              <h3 className="text-xl font-bold text-white flex items-center gap-2">
+                <FaCrown className="text-green-400" /> Explore Unlimited Ebook
+                Creation
+              </h3>
+              <p className="text-slate-400 text-xs max-w-xl leading-relaxed">
+                Now you can publish more then <strong> 3 ebooks</strong>. you
+                are a <strong>Premium</strong> writer now.
+              </p>
+            </div>
           </div>
         </Card>
       )}
