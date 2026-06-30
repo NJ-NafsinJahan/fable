@@ -41,9 +41,15 @@ const BookmarkPage = () => {
   return (
     <div className="min-h-screen bg-slate-950 text-white p-8">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold mb-6">
-          My Bookmarked Books ({bookmarks.length})
-        </h1>
+        {/* header section */}
+        <div className="max-w-4xl mb-5 mx-auto border-b border-gray-800">
+          <h1 className="text-3xl text-cyan-400 font-bold mb-4">
+            📚 My Bookmarked Books ({bookmarks.length})
+          </h1>
+          <p className="mb-4 font-mono text-gray-400 ">
+            Keep tracking your favorites.
+          </p>
+        </div>
 
         {bookmarks.length === 0 ? (
           <p className="text-slate-400">There is no Bookmarked book..!</p>
