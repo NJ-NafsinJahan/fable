@@ -85,7 +85,7 @@ const DashboardSidebar = ({ children }) => {
       key: "bookmark",
       label: "Bookmarks",
       icon: FaBookBookmark,
-      href: "/dashboard/reader/payments",
+      href: "/dashboard/reader/bookmarks",
     },
   ];
 

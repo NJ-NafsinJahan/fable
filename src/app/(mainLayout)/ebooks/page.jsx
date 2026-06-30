@@ -4,6 +4,8 @@ import { Input, Button, Spinner } from "@heroui/react";
 import { FaSearch, FaArrowLeft } from "react-icons/fa";
 import Link from "next/link";
 import FilterPanel from "@/components/FilterPanel";
+import { baseURL } from "@/lib/api/baseUrl";
+// import { baseURL } from "./baseUrl";
 // import EbookCard from "./EbookCard";
 
 const EbooksPage = async ({ searchParams }) => {
@@ -34,7 +36,8 @@ const EbooksPage = async ({ searchParams }) => {
   // console.log(ebooks, "all ebooks");
 
   const res = await fetch(
-    `http://localhost:8000/api/ebooks?${params.toString()}`,
+    `${baseURL}/api/ebooks?${params.toString()}`,
+    // `http://localhost:8000/api/ebooks?${params.toString()}`,
     {
       cache: "no-store",
     },

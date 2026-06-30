@@ -9,12 +9,14 @@ import {
   FiBookOpen,
 } from "react-icons/fi";
 import PurchaseButton from "@/components/PurchaseButton";
+import { baseURL } from "@/lib/api/baseUrl";
+import BookmarkButton from "@/components/BookmarkButton";
 
 const EbookDetailsPage = async ({ params }) => {
   const { id } = await params;
 
   // API Fetching
-  const res = await fetch(`http://localhost:8000/api/ebooks/${id}`, {
+  const res = await fetch(`${baseURL}/api/ebooks/${id}`, {
     cache: "no-store",
   });
   const ebookDetails = await res.json();
@@ -170,13 +172,16 @@ const EbookDetailsPage = async ({ params }) => {
             </Button> */}
 
             {/* ***** */}
-            <Button
+            {/* Bookmark */}
+
+            <BookmarkButton ebookDetails={ebookDetails}></BookmarkButton>
+            {/* <Button
               variant="outline"
               size="lg"
               className="font-semibold text-green-400 border-zinc-700 hover:bg-zinc-900 hover:text-white transition-colors"
             >
               <FiBookmark size={20} /> Bookmark
-            </Button>
+            </Button> */}
           </div>
 
           <hr className="border-zinc-800/80 my-8" />

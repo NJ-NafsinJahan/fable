@@ -79,7 +79,7 @@ const EbookGenres = () => {
           >
             <Card
               shadow="none"
-              isPressable
+              ispressable
               className={`w-full h-full bg-slate-900 border border-white/5 rounded-2xl p-5 transition-all duration-300 flex flex-col items-center justify-center text-center group ${genre.bgHover}`}
             >
               <div className="p-3 bg-slate-950 rounded-xl mb-3 group-hover:scale-110 transition-transform duration-300">
