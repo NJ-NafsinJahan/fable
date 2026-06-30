@@ -12,7 +12,7 @@ const FeaturedPage = async () => {
   });
 
   const featuredEbooks = await res.json();
-  console.log(featuredEbooks, "featured Ebooks");
+  //   console.log(featuredEbooks, "featured Ebooks");
 
   return (
     <div className="w-full p-12 bg-slate-900 ">

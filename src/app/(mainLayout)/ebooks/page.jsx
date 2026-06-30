@@ -5,13 +5,14 @@ import { FaSearch, FaArrowLeft } from "react-icons/fa";
 import Link from "next/link";
 import FilterPanel from "@/components/FilterPanel";
 import { baseURL } from "@/lib/api/baseUrl";
+import PaginationControls from "@/components/PaginationControls";
 // import { baseURL } from "./baseUrl";
 // import EbookCard from "./EbookCard";
 
 const EbooksPage = async ({ searchParams }) => {
-  // search filter
+  // search filter || pagination
   const sParams = await searchParams;
-  console.log(sParams);
+  console.log(sParams, "page ");
   const page = sParams.page || "1";
   const search = sParams.search || "";
   const category = sParams.category || "";
@@ -19,7 +20,7 @@ const EbooksPage = async ({ searchParams }) => {
 
   const params = new URLSearchParams();
   params.set("page", page);
-  params.set("limit", "6");
+  params.set("limit", "8");
   if (search) {
     params.set("search", search);
   }
@@ -45,6 +46,10 @@ const EbooksPage = async ({ searchParams }) => {
 
   const data = await res.json();
   const ebooks = data.ebooks || data;
+  // *****
+
+  const totalPages = data.totalPages || 1;
+  const currentPage = Number(data.currentPage);
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 pt-24 md:pt-28 pb-12 transition-colors duration-300">
@@ -107,6 +112,11 @@ const EbooksPage = async ({ searchParams }) => {
           )}
         </div>
       </Suspense>
+
+      {/* pagination */}
+      <div className="flex justify-center border-t border-white/5 pt-6">
+        <PaginationControls totalPages={totalPages} currentPage={currentPage} />
+      </div>
     </div>
   );
 };
