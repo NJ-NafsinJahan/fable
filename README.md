@@ -42,6 +42,6 @@ Traditional ebook reading is often limited to bookstores or libraries. An online
 ## 🔗 Live Link
 
 ```
-https://booknook-beta.vercel.app
+ https://fable-drab.vercel.app
 
 ```

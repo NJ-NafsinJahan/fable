@@ -45,10 +45,13 @@ export default function Navbar() {
 
   console.log(session, "session form navbar");
 
+  // *******
+  //href={`/dashboard/${session?.user?.role}`}
+
   //   const mockUser = {
   //     name: "Jane Doe",
   //     email: "jane@example.com",
-  //     role: "attendee",
+  //     role: "reader",
   //     image: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde",
   //   };
 
@@ -234,7 +237,7 @@ export default function Navbar() {
                     </Link>
                     {session && session?.user && (
                       <Link
-                        href="/dashboard"
+                        href={`/dashboard/${session?.user?.role}`}
                         onClick={() => setMobileMenuOpen(false)}
                         className={`px-4 py-2.5 rounded-xl text-sm font-medium transition ${
                           pathname.startsWith("/dashboard")

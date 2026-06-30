@@ -132,7 +132,7 @@ const DashboardSidebar = ({ children }) => {
           : null;
 
   return (
-    <div>
+    <div className="w-64 h-screen sticky top-0 p-4 shrink-0 hidden md:block">
       {" "}
       <aside className=" md:flex md:w-64 flex-col bg-slate-950/40 backdrop-blur-xl border-r border-white/5 h-screen sticky top-0">
         {/* LOGO SECTION */}

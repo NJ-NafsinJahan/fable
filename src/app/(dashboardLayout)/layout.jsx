@@ -6,7 +6,7 @@ import DashboardSidebar from "@/components/DashboardSidebar";
 
 const DashboardLayout = ({ children }) => {
   return (
-    <div className="bg-[#030712] min-h-screen w-full flex items-center justify-center  pb-16 px-4 md:px-6 relative overflow-hidden">
+    <div className="bg-[#030712] min-h-screen w-full flex  pb-16 px-4 md:px-6 relative overflow-hidden">
       {/* dashboard ar main Layout , based on role  children section will chang*/}
 
       <DashboardSidebar></DashboardSidebar>
